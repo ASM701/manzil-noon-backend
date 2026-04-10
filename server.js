@@ -1,11 +1,12 @@
 import express from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
-
+import wishlistRoutes from './api/wishlist.js'
 import productRoutes from './api/products.js'
 import authRoutes from './api/auth.js'
 import orderRoutes from './api/orders.js'
 import userRoutes from './api/users.js'
+import cartRoutes from './api/cart.js'
 
 dotenv.config()
 
@@ -20,6 +21,8 @@ app.use('/api/products', productRoutes)
 app.use('/api/auth', authRoutes)
 app.use('/api/orders', orderRoutes)
 app.use('/api/users', userRoutes)
+app.use('/api/wishlist', wishlistRoutes)
+app.use('/api/cart', cartRoutes)
 
 // Health check
 app.get('/', (req, res) => {
