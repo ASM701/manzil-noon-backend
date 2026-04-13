@@ -63,4 +63,20 @@ router.put('/orders/:id', requireAuth, requireAdmin, async (req, res) => {
   res.json(data)
 })
 
+router.put('/variants/:id/stock', requireAuth, requireAdmin, async (req, res) => {
+  const { id } = req.params
+  const { stock } = req.body
+
+  const { data, error } = await supabaseAdmin
+    .from('product_variants')
+    .update({ stock })
+    .eq('id', id)
+    .select()
+    .single()
+
+  if (error) return res.status(400).json({ error: error.message })
+
+  res.json(data)
+})
+
 export default router

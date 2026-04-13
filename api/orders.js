@@ -1,5 +1,5 @@
 import express from 'express'
-import supabase from '../lib/supabase.js'
+import supabase, { supabaseAdmin } from '../lib/supabase.js'
 import { requireAuth } from '../middleware/auth.js'
 
 const router = express.Router()
@@ -12,7 +12,6 @@ router.post('/', requireAuth, async (req, res) => {
     return res.status(400).json({ error: 'Order must have at least one item' })
   }
 
-  // Create the order
   const { data: order, error: orderError } = await supabase
     .from('orders')
     .insert({
@@ -26,7 +25,6 @@ router.post('/', requireAuth, async (req, res) => {
 
   if (orderError) return res.status(400).json({ error: orderError.message })
 
-  // Insert order items
   const orderItems = items.map(item => ({
     order_id: order.id,
     product_id: item.productId,
@@ -43,6 +41,25 @@ router.post('/', requireAuth, async (req, res) => {
     .insert(orderItems)
 
   if (itemsError) return res.status(400).json({ error: itemsError.message })
+
+  // Decrease stock for each ordered variant
+  for (const item of items) {
+    const { data: variant } = await supabaseAdmin
+      .from('product_variants')
+      .select('stock')
+      .eq('product_id', item.productId)
+      .eq('label', item.variantLabel)
+      .single()
+
+    if (variant) {
+      const newStock = Math.max(0, variant.stock - item.quantity)
+      await supabaseAdmin
+        .from('product_variants')
+        .update({ stock: newStock })
+        .eq('product_id', item.productId)
+        .eq('label', item.variantLabel)
+    }
+  }
 
   res.status(201).json({
     message: 'Order created successfully',
