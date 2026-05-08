@@ -61,6 +61,37 @@ router.post('/', requireAuth, async (req, res) => {
     }
   }
 
+  // Decrease size stock if applicable
+// Decrease variant size stock if applicable
+for (const item of items) {
+  if (item.size) {
+    const { data: variantData } = await supabaseAdmin
+      .from('product_variants')
+      .select('id')
+      .eq('product_id', item.productId)
+      .eq('label', item.variantLabel)
+      .single()
+
+    if (variantData) {
+      const { data: sizeData } = await supabaseAdmin
+        .from('product_variant_sizes')
+        .select('stock')
+        .eq('variant_id', variantData.id)
+        .eq('label', item.size)
+        .single()
+
+      if (sizeData) {
+        const newStock = Math.max(0, sizeData.stock - item.quantity)
+        await supabaseAdmin
+          .from('product_variant_sizes')
+          .update({ stock: newStock })
+          .eq('variant_id', variantData.id)
+          .eq('label', item.size)
+      }
+    }
+  }
+}
+
   res.status(201).json({
     message: 'Order created successfully',
     order
