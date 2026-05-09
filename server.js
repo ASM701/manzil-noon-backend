@@ -8,6 +8,7 @@ import orderRoutes from './api/orders.js'
 import userRoutes from './api/users.js'
 import cartRoutes from './api/cart.js'
 import adminRoutes from './api/admin.js'
+import settingsRoutes from './api/settings.js'
 
 dotenv.config()
 
@@ -25,6 +26,7 @@ app.use('/api/users', userRoutes)
 app.use('/api/wishlist', wishlistRoutes)
 app.use('/api/cart', cartRoutes)
 app.use('/api/admin', adminRoutes)
+app.use('/api/settings', settingsRoutes)
 
 // Health check
 app.get('/', (req, res) => {
