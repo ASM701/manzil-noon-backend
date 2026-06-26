@@ -14,7 +14,7 @@ router.post('/', requireAuth, async (req, res) => {
     return res.status(400).json({ error: 'Order must have at least one item' })
   }
 
-  const { data: order, error: orderError } = await supabase
+  const { data: order, error: orderError } = await supabaseAdmin
     .from('orders')
     .insert({
       user_id: req.user.id,
@@ -39,7 +39,7 @@ router.post('/', requireAuth, async (req, res) => {
     is_gift: item.isGift || false
   }))
 
-  const { error: itemsError } = await supabase
+  const { error: itemsError } = await supabaseAdmin
     .from('order_items')
     .insert(orderItems)
 
@@ -187,7 +187,7 @@ router.get('/:id', requireAuth, async (req, res) => {
 router.put('/:id/cancel', requireAuth, async (req, res) => {
   const { id } = req.params
 
-  const { data: order, error: fetchError } = await supabase
+  const { data: order, error: fetchError } = await supabaseAdmin
     .from('orders')
     .select('*')
     .eq('id', id)
@@ -200,7 +200,7 @@ router.put('/:id/cancel', requireAuth, async (req, res) => {
     return res.status(400).json({ error: 'Only pending orders can be cancelled' })
   }
 
-  const { data, error } = await supabase
+  const { data, error } = await supabaseAdmin
     .from('orders')
     .update({ status: 'cancelled' })
     .eq('id', id)
