@@ -20,9 +20,10 @@ app.use(cors({
   origin: function (origin, callback) {
     const allowedOrigins = [
       'http://localhost:5173',
+      'https://manzilnoon.com',
+      'https://www.manzilnoon.com',
       'https://manzil-noon-frontend.vercel.app'
     ]
-    // Allow any vercel.app subdomain
     if (!origin || allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
       callback(null, true)
     } else {
