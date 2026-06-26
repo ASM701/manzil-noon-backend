@@ -1,12 +1,12 @@
 import express from 'express'
-import supabase from '../lib/supabase.js'
+import { supabaseAdmin } from '../lib/supabase.js'
 import { requireAuth } from '../middleware/auth.js'
 
 const router = express.Router()
 
 // Get current user profile
 router.get('/me', requireAuth, async (req, res) => {
-  const { data, error } = await supabase
+  const { data, error } = await supabaseAdmin
     .from('profiles')
     .select('*')
     .eq('id', req.user.id)
@@ -21,7 +21,7 @@ router.get('/me', requireAuth, async (req, res) => {
 router.put('/me', requireAuth, async (req, res) => {
   const { full_name, phone, address } = req.body
 
-  const { data, error } = await supabase
+  const { data, error } = await supabaseAdmin
     .from('profiles')
     .update({ full_name, phone, address, updated_at: new Date() })
     .eq('id', req.user.id)
