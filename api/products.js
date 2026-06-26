@@ -1,11 +1,11 @@
 import express from 'express'
-import supabase from '../lib/supabase.js'
+import supabase, { supabaseAdmin } from '../lib/supabase.js'
 
 const router = express.Router()
 
 // Get all products
 router.get('/', async (req, res) => {
-  const { data, error } = await supabase
+  const { data, error } = await supabaseAdmin
     .from('products')
     .select('*, product_variants(*, product_variant_sizes(*))')
     .order('created_at', { ascending: false })
@@ -19,7 +19,7 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
   const { id } = req.params
 
-  const { data, error } = await supabase
+  const { data, error } = await supabaseAdmin
     .from('products')
     .select('*, product_variants(*, product_variant_sizes(*))')
     .eq('id', id)
