@@ -159,22 +159,20 @@ router.post('/', requireAuth, async (req, res) => {
 
 // Get all orders for current user
 router.get('/', requireAuth, async (req, res) => {
-  const { data, error } = await supabase
+  const { data, error } = await supabaseAdmin
     .from('orders')
     .select('*, order_items(*)')
     .eq('user_id', req.user.id)
     .order('created_at', { ascending: false })
 
   if (error) return res.status(400).json({ error: error.message })
-
   res.json(data)
 })
 
-// Get a single order by id
 router.get('/:id', requireAuth, async (req, res) => {
   const { id } = req.params
 
-  const { data, error } = await supabase
+  const { data, error } = await supabaseAdmin
     .from('orders')
     .select('*, order_items(*)')
     .eq('id', id)
@@ -182,7 +180,6 @@ router.get('/:id', requireAuth, async (req, res) => {
     .single()
 
   if (error) return res.status(404).json({ error: 'Order not found' })
-
   res.json(data)
 })
 
