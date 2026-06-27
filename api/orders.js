@@ -98,7 +98,7 @@ router.post('/', requireAuth, async (req, res) => {
   // Send email notification
   try {
     await resend.emails.send({
-      from: 'Manzil Noon <onboarding@resend.dev>',
+      from: 'Manzil Noon <hello@manzilnoon.com>',
       to: 'Manzilnoon@hotmail.com',
       subject: `🛍️ New Order Received!`,
       html: `
