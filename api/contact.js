@@ -13,7 +13,7 @@ router.post('/', async (req, res) => {
 
   try {
     await resend.emails.send({
-      from: 'Manzil Noon <hello@manzilnoon.com>',
+      from: 'Manzil Noon <send@manzilnoon.com>',
       to: 'Manzilnoon@hotmail.com',
       subject: `New Message: ${subject}`,
       html: `
